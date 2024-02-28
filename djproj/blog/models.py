@@ -8,10 +8,10 @@ class post(models.Model):
     class Status(models.TextChoices):
         DRAFT = 'DF' , 'Draft'
         PUBLISHED = 'PB' , 'Published'
-        REJECTED = 'RG' , 'Rejected'
+        REJECTED = 'RG' , 'Rejected'    
 
     #relation
-    auther = models.ForeignKey(User , on_delete=models.CASCADE , related_name="user_posts")
+    author = models.ForeignKey(User , on_delete=models.CASCADE , related_name="user_posts")
     #data field
     title = models.CharField(max_length=200)
     description = models.TextField()
