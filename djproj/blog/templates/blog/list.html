@@ -1,12 +1,17 @@
 {% extends 'parent/base.html'%}
 {% block title %}post list{% endblock %}
 {% block content %}
-    <h2>post list</h2>
+    <h1>post list</h1>
+<ol style="--length: {{posts.count}}" role="list">
     {% for post in posts %}
-        <h2>
-            <a href="{% url 'blog:post_detail' post.id %}">{{post.title}}</a>
-        </h2>
+        <li style="--i: {{forloop.counter}}">
+        <h3>
+            <!-- <a href="{% url 'blog:post_detail' post.id %}">{{post.title}}</a> -->
+            <a href="{{post.get_absolute_url}}">{{post.title}}</a>
+        </h3>
         <p>{{post.description | truncatewords:3}}</p>
+        </li>
     {% endfor %}
-
+</ol>
+{% include 'partials/pagination.html' with page=posts %} 
 {% endblock %}
