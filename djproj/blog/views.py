@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse,Http404
 from .models import Post
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 # Create your views here.
 
 def index(request):
@@ -13,7 +13,12 @@ def post_list(request):
 
     paginator = Paginator(posts, 2) #
     page_number = request.GET.get('page',1)
-    posts = paginator.page(page_number)
+    try:
+        posts = paginator.page(page_number)
+    except EmptyPage:
+        raise Http404("Sorry! That page does not exist.")# posts = paginator.page(paginator.num_pages) <we can use this insted that>
+    except PageNotAnInteger:
+        posts = paginator.page(1)
     context={
         'posts':posts
         }
