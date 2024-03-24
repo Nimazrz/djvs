@@ -60,10 +60,11 @@ class PostDetailView(DeleteView):
 
 
 def ticket(request):
-    ticket_obj = Ticket.objects.create()
-    if  request.method == "POST":
+    if request.method == "POST":
+        
         form =TicketForm(request.POST)
         if form.is_valid():
+            ticket_obj = Ticket.objects.create()
             cd = form.cleaned_data
             ticket_obj.message = cd['message']
             ticket_obj.name = cd['name']
@@ -71,7 +72,8 @@ def ticket(request):
             ticket_obj.phone = cd['phone']
             ticket_obj.subject = cd['subject']
             ticket_obj.save()
-            redirect('blog:index')
+            return redirect('blog:index')
     
     else:
-        # ادامش بعدا دقیقه 17:45
+        form = TicketForm()
+    return render(request,"forms/ticket.html" , {'form':form})

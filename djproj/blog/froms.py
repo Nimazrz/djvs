@@ -11,4 +11,4 @@ class TicketForm(forms.Form):
     name = forms.CharField(max_length=250 ,required=True)
     email = forms.EmailField()
     phone = forms.CharField(max_length=11,required=True)
-    subject = forms.CharField(choices=SUBJECT_CHOICES,max_length=250)
+    subject = forms.ChoiceField(choices=SUBJECT_CHOICES)
