@@ -7,13 +7,13 @@
     <!-- {{ form.as_ul }} as_div , as_table , as_p -->
     <!-- _________________________________________________________________ -->
 
-    {% for field in form %}
+    <!-- {% for field in form %}
         {{ field.label_tag }}
         {{ field }}
         {{ field.errors }}
-    {% endfor %}
-    <!-- ______________________________________________________________________
-     نام و نام خانوادگی:
+    {% endfor %} -->
+     <!-- ______________________________________________________________________ -->
+      نام و نام خانوادگی:
     <input type="text" , name="name" required>
     <br>
     :ایمیل
@@ -30,7 +30,7 @@
         <option value="انتقاد">انتقاد</option>
         <option value="گزارش">گزارش</option>
     </select>
-    <br>   -->
+    <br>   
     <input type="submit", value="ثبت">
 </form>
 {% endblock %} 
