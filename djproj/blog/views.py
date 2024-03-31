@@ -61,19 +61,19 @@ class PostDetailView(DeleteView):
 
 def ticket(request):
     if request.method == "POST":
-        
         form =TicketForm(request.POST)
         if form.is_valid():
-            ticket_obj = Ticket.objects.create()
             cd = form.cleaned_data
-            ticket_obj.message = cd['message']
-            ticket_obj.name = cd['name']
-            ticket_obj.email = cd['email']
-            ticket_obj.phone = cd['phone']
-            ticket_obj.subject = cd['subject']
-            ticket_obj.save()
-            return redirect('blog:index')
-    
+            # ticket_obj = Ticket.objects.create()
+            # ticket_obj.message = cd['message']
+            # ticket_obj.name = cd['name']
+            # ticket_obj.email = cd['email']
+            # ticket_obj.phone = cd['phone']
+            # ticket_obj.subject = cd['subject']
+            # ticket_obj.save()                       #we can use the bottom line instead of these 7 lines
+
+            Ticket.objects.create(message = cd['message'] ,name = cd['name'] , email = cd['email'] , phone = cd['phone'] , subject = cd['subject'] )
+            return redirect('blog:index') # send user back to index page after submitting ticket
     else:
         form = TicketForm()
     return render(request,"forms/ticket.html" , {'form':form})

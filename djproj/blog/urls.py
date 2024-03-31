@@ -12,6 +12,6 @@ urlpatterns=[
     # path('posts/<int:id>',views.post_detail,name='post_detail') # this changes is for class based views
     path('posts/<pk>',views.PostDetailView.as_view(),name='post_detail'),
 
-    path('ticket',views.ticket,name="ticket"), # this is fot forms
+    path('ticket/',views.ticket,name="ticket"), # this is fot forms
     
 ]
