@@ -3,10 +3,30 @@
 {% block content %}
     <h1>post detail</h1>
     <h2>{{post.title}} (by {{post.author}})</h2>
-    <p>{{post.description | linebreaks}}</p>
+    <p>{{post.description|linebreaks}}</p>
     <hr>
     <p>{{post.publish}}</p>
     <!-- <p>{{new_date | date:'Y/m/d'}}</p> -->
     
+    <!-- for comments -->
+    <div>
+        {% with comments.count as cm_count %}
+        {{ cm_count }} comment{{ cm_count|pluralize }}
+    </div>
+
+    <div>
+        {% for cm in comments %}
+            {{ cm.body|linebreaks }}
+            <br>
+            {{ cm.name }}
+        {% empty %}
+        کامنتی وجود ندارد
+        {% endfor %}
+    </div>
+    <form method="post" action="{% url 'blog:post_comment' post_id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="افزودن کامنت">
+    </form>
 
 {% endblock %}

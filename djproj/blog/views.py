@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_list_or_404 ,redirect
+from django.shortcuts import render,get_list_or_404 ,redirect , get_object_or_404
 from django.http import HttpResponse,Http404
 from .models import *
 from .froms import *
@@ -6,6 +6,7 @@ from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 #for class based views
 from django.views.generic import ListView,DeleteView
 import datetime
+from django.views.decorators.http import require_POST
 # Create your views here.
 
 def index(request):
@@ -38,25 +39,34 @@ class PostListView(ListView):
     paginate_by=3
     template_name='blog/list.html'
 
-#>> ________________________________________________________________________________________________________________
-# def post_detail(request,id):
-#     try:
-#         post=Post.published.get(pk=id) # get the object with this id or raise an
-#     except:
-#         raise Http404("NO POST FOUND")
+# >> ________________________________________________________________________________________________________________
+def post_detail(request,id):
+    post= get_object_or_404(Post,id=id , status=Post.Status.PUBLISHED)
+    comments = post.comments.filter(active=True) # for comment
+    form=Commentform() #for comment
+    context={
+        'post':post,
+        'form':form, #for comment
+        'comments':comments, #for comment
+    }
+    return render(request,"blog/detail.html",context)
+    # try:
+    #     post=Post.published.get(pk=id) # get the object with this id or raise an
+    # except:
+    #     raise Http404("NO POST FOUND")
     
-#     context={
-#         'post':post,
-#         'new_date' :datetime.datetime.now()
+    # context={
+    #     'post':post,
+    #     'new_date' :datetime.datetime.now()
         
-#         }
+    #     }
 
-#     return render(request,"blog/detail.html",context)
+    # return render(request,"blog/detail.html",context)
 # ________________________________________________________________________________________________________________
 
-class PostDetailView(DeleteView):
-    model=Post
-    template_name='blog/detail.html'
+# class PostDetailView(DeleteView):
+#     model=Post
+#     template_name='blog/detail.html'
 
 
 def ticket(request):
@@ -77,3 +87,20 @@ def ticket(request):
     else:
         form = TicketForm()
     return render(request,"forms/ticket.html" , {'form':form})
+
+
+@require_POST
+def post_comment(request , post_id):
+    post = get_list_or_404(request , id=post_id , status=Post.Status.PUBLISHED)
+    comment=None
+    form=Commentform(data=request.Post)
+    if form.is_valid():
+        comment=form.save(commit=False)
+        comment.post = post
+        comment.save()
+    context={
+        'post':post,
+        'form':form,
+        'comment':comment
+        }
+    return render(request , "forms/comment.html" , context)
