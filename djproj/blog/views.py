@@ -50,6 +50,7 @@ def post_detail(request,id):
         'comments':comments, #for comment
     }
     return render(request,"blog/detail.html",context)
+# ________________________________________________________________________________________________________________
     # try:
     #     post=Post.published.get(pk=id) # get the object with this id or raise an
     # except:
@@ -91,9 +92,9 @@ def ticket(request):
 
 @require_POST
 def post_comment(request , post_id):
-    post = get_list_or_404(request , id=post_id , status=Post.Status.PUBLISHED)
+    post = get_object_or_404(Post, id=post_id , status=Post.Status.PUBLISHED)
     comment=None
-    form=Commentform(data=request.Post)
+    form=Commentform(data=request.POST)
     if form.is_valid():
         comment=form.save(commit=False)
         comment.post = post

@@ -26,6 +26,13 @@ class TicketForm(forms.Form):
             
 
 class Commentform(forms.ModelForm):
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if name:
+            if len(name)< 3: 
+                raise forms.ValidationError("name is yoo short")
+            else:
+                return name
     class  Meta:
         model = Comment
         fields = ['name' , 'body']

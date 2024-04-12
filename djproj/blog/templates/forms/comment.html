@@ -4,12 +4,12 @@
     {% if comment %}
         کامنت شما ثبت شد
         <a href="{{ post.get_absolute_url }}">بازگشت به پست</a>
-    {% endif %}
+    {% else %}
 
-    <form method="post" action="{% url 'blog:post_comment' post_id %}">
-        {% csrf_token %}
-        {% form.as_p %}
+    <form method="post" action="{% url 'blog:post_comment' post.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
         <input type="submit" value="افزودن کامنت">
     </form>
-
+    {% endif %}
 {% endblock %} 

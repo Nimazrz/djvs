@@ -11,7 +11,7 @@ urlpatterns=[
     path('posts/',views.PostListView.as_view(),name='post_list'),
     path('posts/<int:id>',views.post_detail,name='post_detail'), # this changes is for class based views
     # path('posts/<pk>',views.PostDetailView.as_view(),name='post_detail'),
-    path('posts/<int:id>/comment',views.post_comment,name='comment'),
+    path('posts/<post_id>/comment',views.post_comment,name='post_comment'),
     path('ticket/',views.ticket,name="ticket"), # this is fot forms
     
 ]
