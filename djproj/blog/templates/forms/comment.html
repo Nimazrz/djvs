@@ -1,6 +1,6 @@
 {% extends 'parent/base.html'%}
 {% block  title %}post comment{% endblock %}
-{% block content %}
+{% block content %}     
     {% if comment %}
         کامنت شما ثبت شد
         <a href="{{ post.get_absolute_url }}">بازگشت به پست</a>
@@ -12,4 +12,5 @@
         <input type="submit" value="افزودن کامنت">
     </form>
     {% endif %}
+
 {% endblock %} 

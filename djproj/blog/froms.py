@@ -33,6 +33,7 @@ class Commentform(forms.ModelForm):
                 raise forms.ValidationError("name is yoo short")
             else:
                 return name
-    class  Meta:
+    class Meta:
         model = Comment
         fields = ['name' , 'body']
+            

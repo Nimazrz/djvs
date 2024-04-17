@@ -29,6 +29,7 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True)
     #choice field
     status = models.CharField(max_length=225 , choices=Status.choices , default=Status.DRAFT,verbose_name='وضعیت')
+    reading_time = models.PositiveIntegerField()
     #custom manager
     objects = models.Manager()
     published = PublishManager()
@@ -79,7 +80,6 @@ class Comment(models.Model):
         indexes = [
             models.Index(fields=['created'])
             ]
-    
-
+        
     def __str__(self):
         return f"{self.name}:{self.post}"

@@ -1,9 +1,10 @@
 {% extends 'parent/base.html'%}
 {% block  title %}post details{% endblock %}
+{% load blog_tags %}
 {% block content %}
     <h1>post detail</h1>
     <h2>{{post.title}} (by {{post.author}})</h2>
-    <p>{{post.description|linebreaks}}</p>
+    <p>{{post.description| markdown }}</p>
     <hr>
     <p>{{post.publish}}</p>
     <p>{{new_date | date:'Y/m/d'}}</p>
@@ -16,9 +17,8 @@
 
     <div>
         {% for cm in comments %}
-            {{ cm.body|linebreaks }}
-            <br>
-            {{ cm.name }}
+            {{ cm.name }}:{{ cm.body|linebreaks }}
+            
         {% empty %}
         کامنتی وجود ندارد
         {% endfor %}
@@ -29,6 +29,6 @@
         {{ form.as_p }}
         <input type="submit" value="افزودن کامنت">
     </form>
-
+    <!-- endcomments -->
     
 {% endblock %}
