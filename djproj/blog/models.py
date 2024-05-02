@@ -36,7 +36,6 @@ class Post(models.Model):
     objects = models.Manager()
     published = PublishManager()
     
-
     class Meta:
         ordering = ['-publish']
         indexes = [
@@ -90,7 +89,6 @@ class Comment(models.Model):
         return f"{self.name}:{self.post}"
 
 #for image field
-
 
 class Image(models.Model):
     post = models.ForeignKey(Post , on_delete=models.CASCADE , related_name="images", verbose_name='تصاویر')
