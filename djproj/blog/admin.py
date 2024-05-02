@@ -6,6 +6,14 @@ admin.sites.AdminSite.site_header = "پنل مدیریت"
 admin.sites.AdminSite.site_title = "پنل "
 admin.sites.AdminSite.index_title = "دسترسی ها"
 
+#inline
+class CommentInline(admin.TabularInline):
+    model=Comment
+    extra=0
+class ImageInline(admin.StackedInline):
+    model=Image
+    extra=0
+
 
 # admin.site.register(post)
 @admin.register(Post) 
@@ -21,6 +29,8 @@ class PostAdmin(admin.ModelAdmin):
     list_editable = ['status'] 
     list_display_links = ['title']
 
+    inlines=[ImageInline, CommentInline]
+
 @admin.register(Ticket) 
 class TicketAdmin(admin.ModelAdmin):
     list_display=('name','subject','phone')
@@ -31,3 +41,7 @@ class CommentAdmin(admin.ModelAdmin):
     list_filter = ['active', 'created', 'updated']
     search_fields = ['name', 'body']
     list_editable = ['active'] 
+
+@admin.register(Image) 
+class ImageAdmin(admin.ModelAdmin):
+     list_display = [ 'post' , 'title' , 'created']

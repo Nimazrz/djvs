@@ -1,5 +1,9 @@
 from django import forms
 from .models import Comment
+from django.contrib.auth.models import User
+from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
+
 
 class TicketForm(forms.Form):
     # چون توی تمپلیت وارد کردیم اینجا دیگه بی معنیه و میتوانیم وارد نکنیم و در سابچکت بجای چوز فیلد باید از چر فیلد استفاده کنیم  و پرانتز روبروش رو خالی کنیم
@@ -15,15 +19,16 @@ class TicketForm(forms.Form):
     phone = forms.CharField(max_length=11,required=True)
     subject = forms.CharField()#choices=SUBJECT_CHOICES
 
-    #اعتبار سنجی برای هرمقدار که خودمون بخوایم
     def clean_phone(self):
         phone = self.cleaned_data['phone']
+
+        if not phone.startswith('09') or len(phone) != 11:
+            raise forms.ValidationError("Phone number must be 11 digits and start with  09")
         if phone:
             if not phone.isnumeric():
                 raise forms.ValidationError("The number is invalid")
             else:
                 return phone
-            
 
 class Commentform(forms.ModelForm):
     def clean_name(self):
@@ -36,4 +41,28 @@ class Commentform(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['name' , 'body']
+
+class PostForm(forms.Form):
+    writer= forms.CharField()
+    author = models.ForeignKey(User , on_delete=models.CASCADE)
+    title = forms.CharField(max_length=200 , required=True)
+    description = forms.CharField(widget=forms.Textarea, required=True)
+    readingtime = forms.CharField()
+
+    def clean_writer(self):
+        writer=self.cleaned_data['writer']
+        user_names = User.objects.all()
+        for i in range(0,len(user_names)):
+            print(i)
+            print(user_names[i].username)
+            if writer == user_names[i].username:
+                return 4
             
+    def slugy(text):
+        return text.replace( " ","-")
+
+
+class SearchForm(forms.Form):
+    query=forms.CharField()
+
+

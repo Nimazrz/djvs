@@ -1,12 +1,15 @@
 from django.shortcuts import render,get_list_or_404 ,redirect , get_object_or_404
 from django.http import HttpResponse,Http404
+from django.contrib.auth.decorators import login_required
 from .models import *
 from .froms import *
+from .froms import PostForm
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 #for class based views
 from django.views.generic import ListView,DeleteView
-import datetime
 from django.views.decorators.http import require_POST
+from django.db.models import Q
+from django.contrib.postgres.search import SearchVector, SearchQuery ,SearchRank, TrigramSimilarity
 # Create your views here.
 
 def index(request):
@@ -70,6 +73,19 @@ def post_detail(request,id):
 #     template_name='blog/detail.html'
 
 
+@login_required
+def post_write(request):
+    if request.method == 'POST':
+        print(f'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa :  {PostForm.clean_writer}')
+        title = request.POST['title']
+        description = request.POST['description']
+        readingtime = request.POST['readingtime']
+        slug = PostForm.slugy(request.POST['title'])
+        author = request.user
+        post = Post.objects.create(title=title, description=description, author=author, readingtime=readingtime,slug=slug)
+        return redirect('blog:index')
+    return render(request, 'forms/write.html')
+
 def ticket(request):
     if request.method == "POST":
         form =TicketForm(request.POST)
@@ -105,3 +121,32 @@ def post_comment(request , post_id):
         'comment':comment
         }
     return render(request , "forms/comment.html" , context)
+
+def post_search(request):
+    query=None
+    results=[]
+    if 'query' in request.GET:
+        form=SearchForm(data=request.GET)
+        if form.is_valid():
+            query=form.cleaned_data['query']
+            # results=Post.published.filter(Q(title__search=query) | Q(description__search=query))
+            # search_query=SearchQuery(query)
+            # search_vector=SearchVector('title', 'description')
+            #
+            results1=Post.published.annotate(similarity=TrigramSimilarity('title', query)).filter(similarity__gt=0.1)
+            results2=Post.published.annotate(similarity=TrigramSimilarity('description', query)).filter(similarity__gt=0.1)
+            results=(results1 | results2).order_by('-similarity')
+            # 
+            
+
+    context={
+        'query':query,
+        'results':results,
+    }
+    return render(request,'blog/search.html',context)
+
+def profile(request):
+    user=request.user
+    posts=Post.published.filter(author=user)
+    return render(request,"blog/profile.html" ,{'posts':posts})
+   

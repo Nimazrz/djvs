@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 # from django_jalali.db import models as jmodels #not using now
 from django.urls import reverse
+from django_resized import ResizedImageField
+from .others import upload_to_author_directory
 
 # manager
 class PublishManager(models.Manager):
@@ -29,7 +31,7 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True)
     #choice field
     status = models.CharField(max_length=225 , choices=Status.choices , default=Status.DRAFT,verbose_name='وضعیت')
-    reading_time = models.PositiveIntegerField()
+    readingtime = models.PositiveBigIntegerField()
     #custom manager
     objects = models.Manager()
     published = PublishManager()
@@ -47,6 +49,9 @@ class Post(models.Model):
 
     def get_absolute_url(self): # for making canonical urls(The unique url of each post)
         return reverse('blog:post_detail',args=[self.id])
+    
+    def author_full_name(self):
+        return str(self.author)
     
     
 # for forms
@@ -83,3 +88,22 @@ class Comment(models.Model):
         
     def __str__(self):
         return f"{self.name}:{self.post}"
+
+#for image field
+
+
+class Image(models.Model):
+    post = models.ForeignKey(Post , on_delete=models.CASCADE , related_name="images", verbose_name='تصاویر')
+    image_file=ResizedImageField(upload_to=upload_to_author_directory,max_length=500,size=[500, 300], quality=75, crop=['middle', 'center'])#<<upload_to_author_directory>> this function imported from others.py file
+    title = models.CharField(max_length=200,verbose_name='عنوان', null=True, blank=True)
+    description = models.TextField(verbose_name='توضیحات', null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created']
+        indexes = [
+            models.Index(fields=['created'])
+        ]
+
+    def __str__(self):
+        return self.title if self.title else str(self.image_file)

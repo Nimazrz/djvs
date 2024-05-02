@@ -8,11 +8,27 @@
     <p>Date of the last post : {% last_post_published %}</p>
 
     {% latest_posts 5 %}
+    {% active_users %}
 
     <h2>محبوب ترین پست ها</h2>
     {% most_popular_posts 3 as pop_posts %}
     {% for post in  pop_posts %}
-        <a href="post.get_absolute_url">{{ post.title }}</a> with {{ post.comments_count }} comments
+        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a> with {{ post.comments_count }} comments
         <br>
     {% endfor %}
+
+    <h2>پستی هایی که بیشترین زمان مطالعه را دارد</h2>
+    {% most_time_taken 3 as mtt %}
+    {% for post in mtt%}
+    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a> with {{ post.readingtime }} minutes
+    <br>
+    {% endfor %}
+
+    <h2>پستی هایی که کمترین زمان مطالعه را دارد</h2>
+    {% less_time_taken 3 as ltt%}
+    {% for post in ltt %}
+    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a> with {{ post.readingtime }} minutes
+    <br>
+    {% endfor %}
+    
 {% endblock %}

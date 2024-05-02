@@ -1,0 +1,38 @@
+{% extends 'parent/base.html'%}
+{% block title %}post write{% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        نویسنده:
+        <input type="text" name="writer">
+        <br>
+        موضوع:
+        <input type="text" name="title" {% if form.title.value %} value="{{ form.title.value }}" {% endif %}>
+        <br>
+        متن:
+        <textarea name="description">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+        <br>
+        تایم مطالعه:
+        <input type="number" min="0" name="readingtime">
+        <br>
+        <input type="submit"  value="ثبت پست">
+    </form>
+    
+{% if form.errors %}
+    لطفا خطای زیر را اصلاح کنید
+    <br>
+    {% for field in form %}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                {{ field.label }} : {{error}}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% if form.non_field_errors %}
+    {{form.non_field_errors}}
+{% endif %}
+
+
+
+{% endblock %} 
