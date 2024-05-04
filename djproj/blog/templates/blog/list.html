@@ -12,7 +12,7 @@
         </h3>
         <p>{{post.description | truncatewords:3}}</p>
         {% if post.images.first.title %}
-        <img src="{{post.images.first.image_file.url}}" alt="{{post.images.first.title.name}}">
+        <img src="{{post.images.first.image_file.url}}" alt="{{post.images.first.title}}">
         {% else %}
         <img src="{{post.images.first.image_file.url}} " alt="{{post.images.first.image_file.name}}">
         {% endif %}

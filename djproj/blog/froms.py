@@ -43,7 +43,6 @@ class Commentform(forms.ModelForm):
         fields = ['name' , 'body']
 
 class PostForm(forms.Form):
-    writer= forms.CharField()
     author = models.ForeignKey(User , on_delete=models.CASCADE)
     title = forms.CharField(max_length=200 , required=True)
     description = forms.CharField(widget=forms.Textarea, required=True)
@@ -57,10 +56,6 @@ class PostForm(forms.Form):
             print(user_names[i].username)
             if writer == user_names[i].username:
                 return 4
-            
-    def slugy(text):
-        return text.replace( " ","-")
-
 
 class SearchForm(forms.Form):
     query=forms.CharField()

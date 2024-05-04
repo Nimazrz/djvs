@@ -3,9 +3,6 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        نویسنده:
-        <input type="text" name="writer">
-        <br>
         موضوع:
         <input type="text" name="title" {% if form.title.value %} value="{{ form.title.value }}" {% endif %}>
         <br>

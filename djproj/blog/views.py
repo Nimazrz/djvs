@@ -3,7 +3,7 @@ from django.http import HttpResponse,Http404
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .froms import *
-from .froms import PostForm
+from .others import *
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 #for class based views
 from django.views.generic import ListView,DeleteView
@@ -39,7 +39,7 @@ class PostListView(ListView):
     # model=Post
     queryset=Post.published.all()
     context_object_name='posts'
-    paginate_by=3
+    paginate_by=5
     template_name='blog/list.html'
 
 # >> ________________________________________________________________________________________________________________
@@ -76,15 +76,16 @@ def post_detail(request,id):
 @login_required
 def post_write(request):
     if request.method == 'POST':
-        print(f'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa :  {PostForm.clean_writer}')
-        title = request.POST['title']
-        description = request.POST['description']
-        readingtime = request.POST['readingtime']
-        slug = PostForm.slugy(request.POST['title'])
-        author = request.user
-        post = Post.objects.create(title=title, description=description, author=author, readingtime=readingtime,slug=slug)
+        form = PostForm(data=request.POST)
+        if form.is_valid():
+          cd = form.cleaned_data
+          Post.objects.create(title = cd['title'] ,description = cd['description'] ,\
+                            readingtime = cd['readingtime'] , slug =slugy(request.POST['title']) ,\
+                            author = request.user )
         return redirect('blog:index')
-    return render(request, 'forms/write.html')
+    else:
+        form = PostForm()
+    return render(request, 'forms/write.html', {'form':form})
 
 def ticket(request):
     if request.method == "POST":
@@ -149,5 +150,7 @@ def post_search(request):
 def profile(request):
     user=request.user
     posts=Post.published.filter(author=user)
+    print(posts,user)
+    print("hello")
     return render(request,"blog/profile.html" ,{'posts':posts})
    
