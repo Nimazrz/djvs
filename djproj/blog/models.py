@@ -1,3 +1,4 @@
+from typing import Iterable
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -5,6 +6,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django_resized import ResizedImageField
 from .others import upload_to_author_directory
+from django.template.defaultfilters import slugify
 
 # manager
 class PublishManager(models.Manager):
@@ -49,6 +51,11 @@ class Post(models.Model):
     def get_absolute_url(self): # for making canonical urls(The unique url of each post)
         return reverse('blog:post_detail',args=[self.id])
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
     def author_full_name(self):
         return str(self.author)
     

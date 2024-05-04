@@ -73,20 +73,22 @@ def post_detail(request,id):
 #     template_name='blog/detail.html'
 
 
-@login_required
-def post_write(request):
+def craete_post(request):
     if request.method == 'POST':
-        form = PostForm(data=request.POST)
+        form = CraetePostForm(request.POST, request.FILES)
         if form.is_valid():
-          cd = form.cleaned_data
-          Post.objects.create(title = cd['title'] ,description = cd['description'] ,\
-                            readingtime = cd['readingtime'] , slug =slugy(request.POST['title']) ,\
-                            author = request.user )
-        return redirect('blog:index')
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            Image.objects.create(image_file=form.cleaned_data['image1'], post = post)
+            Image.objects.create(image_file=form.cleaned_data['image2'], post = post)
+            return redirect('blog:profile')
     else:
-        form = PostForm()
-    return render(request, 'forms/write.html', {'form':form})
+        form = CraetePostForm()
+    return render(request, 'forms/craete_post.html', {'form':form})
 
+
+ 
 def ticket(request):
     if request.method == "POST":
         form =TicketForm(request.POST)

@@ -1,16 +1,9 @@
 {% extends 'parent/base.html'%}
 {% block title %}post write{% endblock %}
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        موضوع:
-        <input type="text" name="title" {% if form.title.value %} value="{{ form.title.value }}" {% endif %}>
-        <br>
-        متن:
-        <textarea name="description">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
-        <br>
-        تایم مطالعه:
-        <input type="number" min="0" name="readingtime">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}    
+        {{ form.as_p }}
         <br>
         <input type="submit"  value="ثبت پست">
     </form>

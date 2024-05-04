@@ -1,7 +1,8 @@
 {% extends 'parent/base.html' %}
-{% block title %}profile{% endblock %}
+{% block title %}{{ user }}'s profile{% endblock %}
 {% block content %}
-<table style="width: 80%;border: 2px solid black; text-align: right; direction: rtl;">
+<a href="{% url 'blog:craete_post' %}">craet new post</a>
+<table style="width: 80%;border: 2px solid #000000; text-align: right; direction: rtl;">
     <tr>
         <th>ردیف</th>
         <th>مشاهده</th>

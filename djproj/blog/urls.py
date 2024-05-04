@@ -12,7 +12,6 @@ urlpatterns=[
     # path('posts/',views.post_list,name='post_list'),  #this changes is for class based views
     path('posts/',views.PostListView.as_view(),name='post_list'),
 
-    path('posts/write/',views.post_write,name='post_write'),
      
     path('posts/<int:id>',views.post_detail,name='post_detail'), # this changes is for class based views
 
@@ -25,5 +24,7 @@ urlpatterns=[
     path('search/',views.post_search ,name="post_search"),
 
     path('profile/',views.profile ,name="profile"),
+
+    path('profile/craete_post/',views.craete_post,name='craete_post'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

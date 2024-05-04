@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comment
+from .models import *
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
@@ -42,11 +42,12 @@ class Commentform(forms.ModelForm):
         model = Comment
         fields = ['name' , 'body']
 
-class PostForm(forms.Form):
-    author = models.ForeignKey(User , on_delete=models.CASCADE)
-    title = forms.CharField(max_length=200 , required=True)
-    description = forms.CharField(widget=forms.Textarea, required=True)
-    readingtime = forms.CharField()
+class CraetePostForm(forms.ModelForm):
+    image1 = forms.ImageField(required=False)
+    image2 = forms.ImageField(required=False)
+    class Meta:
+        model = Post
+        fields = ['title', 'description', 'readingtime']
 
     def clean_writer(self):
         writer=self.cleaned_data['writer']
