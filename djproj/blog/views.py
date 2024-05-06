@@ -152,7 +152,5 @@ def post_search(request):
 def profile(request):
     user=request.user
     posts=Post.published.filter(author=user)
-    print(posts,user)
-    print("hello")
     return render(request,"blog/profile.html" ,{'posts':posts})
    

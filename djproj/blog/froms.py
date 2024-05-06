@@ -49,14 +49,6 @@ class CraetePostForm(forms.ModelForm):
         model = Post
         fields = ['title', 'description', 'readingtime']
 
-    def clean_writer(self):
-        writer=self.cleaned_data['writer']
-        user_names = User.objects.all()
-        for i in range(0,len(user_names)):
-            print(i)
-            print(user_names[i].username)
-            if writer == user_names[i].username:
-                return 4
 
 class SearchForm(forms.Form):
     query=forms.CharField()
