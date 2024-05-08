@@ -55,6 +55,11 @@ class Post(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+    def delete(self, *args, **kwargs):
+       for img in self.images.all():
+        storage, path=img.image_file.storage, img.image_file.path
+        storage.delete(path)
+       super().delete(*args, **kwargs)
 
     def author_full_name(self):
         return str(self.author)

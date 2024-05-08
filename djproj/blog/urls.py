@@ -27,4 +27,6 @@ urlpatterns=[
 
     path('profile/craete_post/',views.craete_post,name='craete_post'),
 
+    path('profile/delete_post/<post_id>', views.delete_post, name='delete_post'),
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
