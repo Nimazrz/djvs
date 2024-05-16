@@ -2,5 +2,8 @@
     <input type="text" name="query" required placeholder="Search..."/>
     <input type="submit" value="Search">
 </form>
-
+{% if request.user.is_authenticated %}
 <p><a href="{% url 'blog:profile' %}">{{ user }}</a></p>
+{% else %}
+<p><a href="">log in</a></p>
+{% endif %}

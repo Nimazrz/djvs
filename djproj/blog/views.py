@@ -73,20 +73,6 @@ def post_detail(request,id):
 #     template_name='blog/detail.html'
 
 
-def craete_post(request):
-    if request.method == 'POST':
-        form = CraetePostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            Image.objects.create(image_file=form.cleaned_data['image1'], post = post)
-            Image.objects.create(image_file=form.cleaned_data['image2'], post = post)
-            return redirect('blog:profile')
-    else:
-        form = CraetePostForm()
-    return render(request, 'forms/craete_post.html', {'form':form})
-
 
  
 def ticket(request):
@@ -149,6 +135,21 @@ def post_search(request):
     }
     return render(request,'blog/search.html',context)
 
+
+def craete_post(request):
+    if request.method == 'POST':
+        form = CraetePostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            Image.objects.create(image_file=form.cleaned_data['image1'], post = post)
+            Image.objects.create(image_file=form.cleaned_data['image2'], post = post)
+            return redirect('blog:profile')
+    else:
+        form = CraetePostForm()
+    return render(request, 'forms/craete_post.html', {'form':form})
+
 def profile(request):
     user=request.user
     posts=Post.published.filter(author=user)
@@ -160,3 +161,24 @@ def delete_post(request, post_id):
         post.delete()
         return redirect("blog:profile")
     return render(request,"forms/delete_post.html", {'post':post})
+
+
+def delete_image(request, image_id):
+    image= get_object_or_404(Image, id=image_id)
+    image.delete()
+    return redirect('blog:profile')
+
+def edit_post(request, post_id):
+    post = get_object_or_404(Post , id=post_id)
+    if request.method == 'POST':
+        form = CraetePostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            Image.objects.create(image_file=form.cleaned_data['image1'], post = post)
+            Image.objects.create(image_file=form.cleaned_data['image2'], post = post)
+            return redirect('blog:edit_post')
+    else:
+        form = CraetePostForm(instance=post)
+    return render(request, 'forms/craete_post.html', {'form':form,'post':post})

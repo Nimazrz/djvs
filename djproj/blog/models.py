@@ -105,7 +105,7 @@ class Comment(models.Model):
 class Image(models.Model):
     post = models.ForeignKey(Post , on_delete=models.CASCADE , related_name="images", verbose_name='تصاویر')
     image_file=ResizedImageField(upload_to=upload_to_author_directory,max_length=500,size=[500, 300], quality=75, crop=['middle', 'center'])#<<upload_to_author_directory>> this function imported from others.py file
-    title = models.CharField(max_length=200,verbose_name='عنوان', null=True, blank=True)
+    title   = models.CharField(max_length=200,verbose_name='عنوان', null=True, blank=True)
     description = models.TextField(verbose_name='توضیحات', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -114,6 +114,10 @@ class Image(models.Model):
         indexes = [
             models.Index(fields=['created'])
         ]
+    def delete(self, *args, **kwargs):
+        storage, path=self.image_file.storage, self.image_file.path
+        storage.delete(path)
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return self.title if self.title else str(self.image_file)
