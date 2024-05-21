@@ -5,6 +5,12 @@
     <h1>post detail</h1>
     <h2>{{post.title}} (by {{post.author}})</h2>
 
+    
+        <p>{{post.description| markdown | sunsor }}</p>
+        <hr>
+        <p>{{post.publish}}</p>
+        <p>{{new_date | date:'Y/m/d'}}</p>
+        
     <div>
         {% for img in post.images.all %}
         <img width="300px" height="300px" src="{{ img.image_file.url }}" alt="{{ image.title }}">
@@ -12,12 +18,6 @@
 
     </div>
 
-
-    <p>{{post.description| markdown | sunsor }}</p>
-    <hr>
-    <p>{{post.publish}}</p>
-    <p>{{new_date | date:'Y/m/d'}}</p>
-    
     <!-- for comments -->
     <div>
         {% with comments.count as cm_count %} 

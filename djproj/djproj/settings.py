@@ -31,13 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'blog.apps.BlogConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog.apps.BlogConfig',
     'django.contrib.postgres',
     # 'django_jalali',
 ]
@@ -137,3 +137,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#for login and logout
+LOGIN_REDIRECT_URL = '/profile/'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
