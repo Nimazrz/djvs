@@ -142,5 +142,5 @@ LOGIN_REDIRECT_URL = '/profile/'
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
 
-
+#for reset password
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
