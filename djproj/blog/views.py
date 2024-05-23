@@ -15,32 +15,32 @@ from django.contrib.auth import authenticate, login, logout #for login
 def index(request):
     return render(request , "blog/index.html" )
 #>> ______________________________________________________________________________________________________________________________________
-# def post_list(request):
+def post_list(request):
 
-#     posts = Post.published.all()
+    posts = Post.published.all()
 
-#     paginator = Paginator(posts, 2) #
-#     page_number = request.GET.get('page',1)
-#     try:
-#         posts = paginator.page(page_number)
-#     except EmptyPage:
-#         raise Http404("Sorry! That page does not exist.")# posts = paginator.page(paginator.num_pages) <we can use this insted that>
-#     except PageNotAnInteger:
-#         posts = paginator.page(1)
+    paginator = Paginator(posts, 2) #
+    page_number = request.GET.get('page',1)
+    try:
+        posts = paginator.page(page_number)
+    except EmptyPage:
+        raise Http404("Sorry! That page does not exist.")# posts = paginator.page(paginator.num_pages) <we can use this insted that>
+    except PageNotAnInteger:
+        posts = paginator.page(1)
         
-#     context={
-#         'posts':posts
-#         }
-#     return render(request,'blog/list.html',context)
+    context={
+        'posts':posts
+        }
+    return render(request,'blog/list.html',context)
 # _______________________________________________________________________________________________________________________________________
 
 # its for class based views
-class PostListView(ListView):
-    # model=Post
-    queryset=Post.published.all()
-    context_object_name='posts'
-    paginate_by=5
-    template_name='blog/list.html'
+# class PostListView(ListView):
+#     # model=Post
+#     queryset=Post.published.all()
+#     context_object_name='posts'
+#     paginate_by=5
+#     template_name='blog/list.html'
 
 # >> ________________________________________________________________________________________________________________
 def post_detail(request,id):
@@ -214,7 +214,26 @@ def register(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
+            Account.objects.create(user=user)
             return render(request, 'registration/register_done.html', {'user':user})
     else:
         form=UserRegisterForm()
     return render(request, 'registration/register.html', {'form':form})
+
+
+@login_required
+def edit_account(request):
+    if request.method == 'POST':
+        user_form=UserEditForm(request.POST, instance=request.user)
+        account_form=AccountEditForm(request.POST, instance=request.user.account, files=request.FILES)
+        if account_form.is_valid() and user_form.is_valid():
+            account_form.save()
+            user_form.save()
+    else:
+        user_form=UserEditForm(instance=request.user)
+        account_form=AccountEditForm(instance=request.user.account)
+    context={
+        'user_form':user_form,
+        'account_form':account_form
+    }
+    return render(request, 'registration/edit_account.html',context)

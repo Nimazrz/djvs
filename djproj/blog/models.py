@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # from django_jalali.db import models as jmodels #not using now
 from django.urls import reverse
 from django_resized import ResizedImageField
-from .others import upload_to_author_directory
+from .others import *
 from django.template.defaultfilters import slugify
 
 # manager
@@ -121,3 +121,14 @@ class Image(models.Model):
 
     def __str__(self):
         return self.title if self.title else str(self.image_file)
+    
+class Account(models.Model):
+    user=models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
+    date_of_birth= models.DateTimeField(null=True, blank=True)
+    bio= models.TextField(null=True, blank=True)
+    photo=ResizedImageField(upload_to=upload_to_author_directory_account,null=True, blank=True)
+    job=models.CharField(max_length=250, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
+    
