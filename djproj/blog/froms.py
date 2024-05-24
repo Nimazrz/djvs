@@ -44,7 +44,7 @@ class CraetePostForm(forms.ModelForm):
     image2 = forms.ImageField(required=False)
     class Meta:
         model = Post
-        fields = ['title', 'description', 'readingtime']
+        fields = ['title', 'description', 'readingtime', 'category']
 
 
 class SearchForm(forms.Form):

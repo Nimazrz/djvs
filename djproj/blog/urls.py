@@ -10,12 +10,13 @@ app_name = "blog"
 urlpatterns=[
     
     path('',views.index, name='index'),
-    
-    path('posts/',views.post_list,name='post_list'),  #this changes is for class based views
+
+    path('posts/',views.post_list,name='post_list'),
+    path('posts/<str:category>',views.post_list,name='post_list_category'),   
     
      # path('posts/',views.PostListView.as_view(),name='post_list'),
 
-    path('posts/detail/<int:id>',views.post_detail,name='post_detail'), # this changes is for class based views
+    path('posts/detail/<int:id>',views.post_detail,name='post_detail'), 
 
     # path('posts/<pk>',views.PostDetailView.as_view(),name='post_detail'),
 

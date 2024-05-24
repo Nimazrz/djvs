@@ -15,11 +15,15 @@ from django.contrib.auth import authenticate, login, logout #for login
 def index(request):
     return render(request , "blog/index.html" )
 #>> ______________________________________________________________________________________________________________________________________
-def post_list(request):
+def post_list(request, category=None):
+    if category is not None:
+        posts=Post.published.filter(category=category)
+    else:
+        posts = Post.published.all()
 
     posts = Post.published.all()
 
-    paginator = Paginator(posts, 2) #
+    paginator = Paginator(posts, 4) #
     page_number = request.GET.get('page',1)
     try:
         posts = paginator.page(page_number)
@@ -29,7 +33,8 @@ def post_list(request):
         posts = paginator.page(1)
         
     context={
-        'posts':posts
+        'posts':posts,
+        'category':category,
         }
     return render(request,'blog/list.html',context)
 # _______________________________________________________________________________________________________________________________________

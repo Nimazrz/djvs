@@ -1,7 +1,20 @@
 {% extends 'parent/base.html'%}
 {% block title %}post list{% endblock %}
 {% block content %}
-    <h1>post list</h1>
+
+{% if category %}
+<h1><a href="{% url 'blog:post_list' %}"> لیست پست های {{ category }}</a></h1>
+{% else %}
+<h1><a href="{% url 'blog:post_list' %}">لیست پست ها</a></h1>
+{% endif %}
+
+
+<a href="{% url 'blog:post_list_category' 'تکنولوژی' %}">تکنولوژی</a> 
+<br>
+<a href="{% url 'blog:post_list_category' 'برنامه نویسی' %}">برنامه نویسی</a>
+<br>
+<a href="{% url 'blog:post_list_category' 'سایر' %}">سایر</a>
+
 <ol style="--length: {{posts|length}}" role="list">
     {% for post in posts %}
         <li style="--i: {{forloop.counter}}">
@@ -19,5 +32,7 @@
         </li>
     {% endfor %} 
 </ol>
-{% include 'partials/pagination.html' with page=page_obj %}
+
+
+{% include 'partials/pagination.html' with page=posts %}
 {% endblock %} 

@@ -19,8 +19,14 @@ class Post(models.Model):
     class Status(models.TextChoices):
         DRAFT = 'DF' , 'Draft'
         PUBLISHED = 'PB' , 'Published'
-        REJECTED = 'RG' , 'Rejected'    
+        REJECTED = 'RG' , 'Rejected'
 
+    CATEGORY_CHOICES=(
+        ('تکنولوژی','تکنولوژی'),
+        ('برنامه نویسی','برنامه نویسی'),
+        ('سایر','سایر'),
+    )
+    
     #relation
     author = models.ForeignKey(User , on_delete=models.CASCADE , related_name="user_posts", verbose_name='نویسنده') 
     #data field
@@ -33,11 +39,11 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True)
     #choice field
     status = models.CharField(max_length=225 , choices=Status.choices , default=Status.DRAFT,verbose_name='وضعیت')
+    category=models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='سایر')
     readingtime = models.PositiveBigIntegerField()
     #custom manager
     objects = models.Manager()
     published = PublishManager()
-    
     class Meta:
         ordering = ['-publish']
         indexes = [
