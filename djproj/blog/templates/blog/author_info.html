@@ -1,0 +1,33 @@
+{% extends 'parent/base.html'%}
+{% block  title %}author info{% endblock %}
+{% load blog_tags %}
+{% block content %}
+<img src="{{ user.account.photo.url }}" alt="profile"  style=" border-radius: 50%; width: 90px;height: 90px;"> 
+{{ user.username }}
+<br>
+<br>
+<br>
+job:
+{% if user.account.job %}
+ {{ user.account.job }}
+{% endif %}
+<br>
+<br>
+bio:
+{% if user.account.bio %}
+ {{ user.account.bio }}
+{% endif %}
+<br>
+<br>
+birthday:
+{% if user.account.date_of_birth %}
+{{ user.account.date_of_birth }}
+{% endif %}
+<br>
+<br>
+count of posts: {{ posts.count }}
+<br>
+most populor post:  <a href="{{mp.get_absolute_url}}">{{mp.title}}</a>
+
+
+{% endblock %}

@@ -1,9 +1,10 @@
 from django import template
-from ..models import Post,Comment
+from ..models import *
 from django.db.models import Count , Max , Min , Avg , Sum
 from markdown import markdown
 from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
+import random
 
 register=template.Library()#for useing sipmletag decorator
 
@@ -42,6 +43,13 @@ def latest_posts(count=4):
 def active_users(count=4):
     users=User.objects.annotate(total_posts=Count('user_posts')).order_by('-total_posts')[:count]
     return {'users':users}
+
+@register.inclusion_tag("partials/post_ad.html")
+def post_ad():
+    random_posts=[]
+    random_posts.append(random.choice(Post.published.all()))
+    random_posts.append(random.choice(Post.published.all()))
+    return{'random_posts':random_posts}
 
 #template filter
 @register.filter(name='markdown')

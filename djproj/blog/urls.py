@@ -36,9 +36,8 @@ urlpatterns=[
 
     path('profile/delete_image/<image_id>', views.delete_image, name='delete_image'),
 
-    # path('login/', views.user_login, name='login'), 
-
-    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('login/', views.LoginView.as_view(), name='login'), 
+    # path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
     path('password-change/', auth_views.PasswordChangeView.as_view(success_url='done'), name='password_change'),
@@ -51,7 +50,9 @@ urlpatterns=[
 
     path('register', views.register, name='register'),
 
-    path('account/edit', views.edit_account, name='edit_account')
+    path('account/edit', views.edit_account, name='edit_account'),
+
+    path('author_info/<int:author_id>', views.author_info, name='author_info'),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

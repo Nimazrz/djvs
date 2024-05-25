@@ -2,22 +2,78 @@
 {% block title %}{{ user }}'s profile{% endblock %}
 {% block content %}
 <a href="{% url 'blog:craete_post' %}">craet new post</a>
-<table style="width: 80%;border: 2px solid #000000; text-align: right; direction: rtl;">
-    <tr>
-        <th>ردیف</th>
-        <th>مشاهده</th>
-        <th>ویرایش</th>
-        <th>حذف</th>
-    </tr>
-    {% for post in posts %}
+<div>
+    <table style="width: 80%;border: 2px solid #000000; text-align: right; direction: rtl;">
+    
         <tr>
-            <td>{{ forloop.counter }}</td>
-            <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
-            <td><a href="{% url 'blog:edit_post' post.id %}">ویرایش</a></td>
-            <td><a href="{% url 'blog:delete_post' post.id %}">حذف</a></td>
+            <th>ردیف</th>
+            <th>پست ها</th>
+            <th>ویرایش</th>
+            <th>حذف</th>
         </tr>
-    {% endfor %}
-</table>
+        {% for post in posts_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
+                <td><a href="{% url 'blog:edit_post' post.id %}">ویرایش</a></td>
+                <td><a href="{% url 'blog:delete_post' post.id %}">حذف</a></td>
+                {% endfor %}
+            </tr>
+        
+    </table>
+    {% include 'partials/pagination.html' with page=posts_list %}
+</div>
+
+
+
+<br>    
+<h2>کامنت ها</h2>
+<div>
+    <table style="width: 80%;border: 2px solid #000000;text-align: right;direction: rtl;">
+        <tr>
+            <th>ردیف</th>
+            <th>کامنت</th>
+            <th>نویسنده کامنت</th>
+            <th>پست مربوطه</th>
+        </tr>
+        
+        <!-- {% for post in posts %}
+            
+                {% for comment in post.comments.all %}
+                <tr> 
+                    <td>{{comment.body | truncatewords:5}}</td>
+                    <td>{{ comment.name }}</td>
+                    <td><a href="{{post.get_absolute_url}}">{{ comment.post }}</a></td>
+                </tr>
+                {% endfor %}
+    
+        {% endfor %}-->
+            {% for comment in comment_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{comment.body | truncatewords:5}}</td>
+                <td>{{ comment.name }}</td>
+                <td><a href="{{comment.post.get_absolute_url}}">{{ comment.post }}</a></td>
+            </tr>
+            {% endfor %}
+    </table>
+    <div class="pagination">
+        {% if comment_list.has_previous %}
+        <a href="?page2={{ comment_list.previous_page_number }}"><<</a> 
+        {% endif %}
+    
+        page {{comment_list.number}} of {{comment_list.paginator.num_pages}}
+    
+        {% if comment_list.has_next %}
+        <a href="?page2={{ comment_list.next_page_number }}">>></a> 
+        {% endif %}
+    
+    </div>
+    
+        
+
+</div>
+
 <br>
 <a href="{% url 'blog:password_change' %}">تغییر پسورد</a>
 <br>

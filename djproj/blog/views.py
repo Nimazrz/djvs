@@ -10,6 +10,8 @@ from django.views.decorators.http import require_POST
 from django.db.models import Q
 from django.contrib.postgres.search import SearchVector, SearchQuery ,SearchRank, TrigramSimilarity
 from django.contrib.auth import authenticate, login, logout #for login
+from django.db.models import Count
+from django.views.generic import View
 
 # Create your views here.
 def index(request):
@@ -159,7 +161,21 @@ def craete_post(request):
 def profile(request):
     user=request.user
     posts=Post.published.filter(author=user)
-    return render(request,"blog/profile.html" ,{'posts':posts})
+    comments=Comment.objects.filter(post__author=user).filter(active=True)
+
+    # pagination for posts
+    paginator1 = Paginator(posts, 10)
+    posts_list = paginator1.get_page(request.GET.get('page'))
+    
+    # paginstion for comments
+    paginator2 = Paginator(comments, 10)
+    comment_list = paginator2.get_page(request.GET.get('page2'))
+
+    context={
+        'posts_list':posts_list,
+        'comment_list':comment_list,
+    }        
+    return render(request,"blog/profile.html" ,context)
 
 @login_required
 def delete_post(request, post_id):
@@ -192,24 +208,23 @@ def edit_post(request, post_id):
     return render(request, 'forms/craete_post.html', {'form':form,'post':post})
 
 
-# def user_login(request):
-#     if request.method == 'POST':
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             cd = form.cleaned_data
-#             user = authenticate(request, username=cd['username'], password=cd['password'])
-#             if user is not None:
-#                 if user.is_active:
-#                     login(request, user)
-#                     return redirect('blog:profile') 
-#                 else:
-#                     return HttpResponse('not active')
-#             else:
-#                 return HttpResponse('not logged in')
-    
-#     else:
-#         form = LoginForm()
-#     return render(request, 'forms/login.html', {'form':form})
+class LoginView(View):
+    template_name = 'registration/login.html'
+
+    def get(self, request):
+        form = LoginForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('blog:index')
+        return render(request, self.template_name, {'form': form})
 
 
 def register(request):
@@ -242,3 +257,15 @@ def edit_account(request):
         'account_form':account_form
     }
     return render(request, 'registration/edit_account.html',context)
+
+def author_info(request, author_id):
+    posts= Post.published.all().filter(author__id=author_id)
+    user=User.objects.get(id=author_id)
+    mp= Post.published.all().filter(author__id=author_id).annotate(comments_count=Count('comments')).order_by('-comments_count').last
+
+    context={
+        'user':user,
+        'posts':posts,
+        'mp':mp
+    }
+    return render(request, 'blog/author_info.html', context)

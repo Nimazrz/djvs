@@ -79,8 +79,6 @@ class  Ticket(models.Model):
     phone = models.CharField(max_length=11,verbose_name='شماره تماس')
     subject = models.CharField(max_length=250, verbose_name= "موضوع")
 
-
-
     # class Meta:
         # verbose_name="تیکت"
         # verbose_name_plural="تیکت ها"
@@ -93,7 +91,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post , on_delete=models.CASCADE , related_name="comments", verbose_name='پست')
     name = models.CharField(max_length=250,verbose_name='نام')
     body = models.TextField(verbose_name='متن کامنت')
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)   
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=False)
 

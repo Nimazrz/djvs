@@ -1,0 +1,12 @@
+<div style=" border: 2px solid #182675; padding: 10px; border-radius: 10px;">
+    <p>AD</p>
+    {% for random_post in random_posts %}
+        <a href="{{ random_post.get_absolute_url }}">{{ random_post}}</a>
+        <br>
+        {{ random_post.description | truncatewords:3}}
+        {% if random_post.images.first %}
+                <img width="300px" height="300px" src="{{ random_post.images.first.image_file.url }}" alt="{{ image.title }}">
+        {% endif %}
+        <br>
+    {% endfor %}
+</div>
